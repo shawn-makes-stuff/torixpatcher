@@ -1,0 +1,187 @@
+{
+ "name": "GXT 868 Torix patch 2",
+ "description": "USB wins over wireless after a replug; per-key lighting via fast ISR-time frame intake; all keys lit; charging LED left alone. Optional: Windows lighting support (HID LampArray).",
+ "target": {
+  "family": "Trust GXT 868 Torix (ZXW/YJX firmware)",
+  "usb_id": "145F:0339",
+  "build_markers": [
+   {
+    "addr": 23263,
+    "text": "Jun 18 2024"
+   },
+   {
+    "addr": 23286,
+    "text": "17:56:18"
+   }
+  ],
+  "read_base": 21819,
+  "app_size": 28672,
+  "flash_size": 32768,
+  "bootloader_landmark": {
+   "addr": 32752,
+   "len": 12,
+   "sha256": "750d9254efc618e33e166a0321a479f33e48bae39482d95cfb4eb561914684ce"
+  }
+ },
+ "patched_check": {
+  "addr": 24078,
+  "new": "0000"
+ },
+ "groups": {
+  "base": {
+   "label": "Core fixes",
+   "default": true
+  }
+ },
+ "guards": [
+  {
+   "group": "base",
+   "addr": 4310,
+   "len": 65,
+   "sha256": "5787203e25876bf434ec9377afd2196f5f3d4088aa3102107fed22d14065ce10"
+  },
+  {
+   "group": "base",
+   "addr": 12636,
+   "len": 66,
+   "sha256": "963b1476943c860f45863d6b8556954401ca8234b2c94c23ebae67c477ca0319"
+  },
+  {
+   "group": "base",
+   "addr": 14186,
+   "len": 70,
+   "sha256": "db98bceb210976f84dfe3861fa1e1439d7de516d7306f2c964fed249660e5040"
+  },
+  {
+   "group": "base",
+   "addr": 14194,
+   "len": 65,
+   "sha256": "10671bb61a609d9e213cff69e248509286d31fc1069e8c144afe0235a292fa0c"
+  },
+  {
+   "group": "base",
+   "addr": 14200,
+   "len": 65,
+   "sha256": "eba4e33918a2532b633a1775e2af0e02671f2113b1d8e67537c99ee1b19e6022"
+  },
+  {
+   "group": "base",
+   "addr": 17498,
+   "len": 70,
+   "sha256": "36c41854360930388e250d71cc11a82e0fe611522ccc9059eaccff3add020029"
+  },
+  {
+   "group": "base",
+   "addr": 24046,
+   "len": 66,
+   "sha256": "c135a70e49d17d04d21d25692cdc048d5951385b95f19ab5740c69e463f38451"
+  },
+  {
+   "group": "base",
+   "addr": 14224,
+   "len": 24,
+   "sha256": "3dd575adb5ef000e0a07e07f6c889edb98f212c0f76ceb9f575211ccc3440c63"
+  },
+  {
+   "group": "base",
+   "addr": 14708,
+   "len": 48,
+   "sha256": "46c5b7dfa9459f3124a4a4f22ad1ca8b36bd3ef95700cba1874025de020308b0"
+  },
+  {
+   "group": "base",
+   "addr": 17536,
+   "len": 24,
+   "sha256": "774f6e00fc1966b6569d2e1df58f1088570e6edb3be92d4f39a09c01b2a79944"
+  },
+  {
+   "group": "base",
+   "addr": 11752,
+   "len": 48,
+   "sha256": "b68344bffd1526c6659670ef4050d623559d1a893d5175f15145c2dc6eca0d60"
+  }
+ ],
+ "patches": [
+  {
+   "group": "base",
+   "addr": 4342,
+   "len": 1,
+   "what": "accept vendor/lighting commands without waiting for a keyboard LED report (no Caps Lock tap needed)",
+   "orig_sha256": "8a331fdde7032f33a71e1b2e257d80166e348e00fcb17914f48bdb57a1c63007",
+   "new": "00",
+   "free_space": false
+  },
+  {
+   "group": "base",
+   "addr": 12668,
+   "len": 2,
+   "what": "per-key frame handler: stop copying from the live USB buffer (the new fast intake does it safely)",
+   "orig_sha256": "fcf0a6c700dd13e274b6fba8deea8dd9b26e4eedde3495717cac8408c9c5177f",
+   "new": "2200",
+   "free_space": false
+  },
+  {
+   "group": "base",
+   "addr": 14218,
+   "len": 6,
+   "what": "per-key draw loop: hook to leave the charging-indicator LED alone",
+   "orig_sha256": "cf5b19d26a93908d9bbbcee5aa25051f4bc149182da1da95a1799a5e3694341e",
+   "new": "a0df23f00000",
+   "free_space": false
+  },
+  {
+   "group": "base",
+   "addr": 14226,
+   "len": 1,
+   "what": "per-key draw loop: stop at LED 125 (codes above alias real LEDs and painted 7 keys black)",
+   "orig_sha256": "e9b0c031f0493d3fd6b0b668260c79e7efe734bfd4b4115f9d82bc3be609c294",
+   "new": "7d",
+   "free_space": false
+  },
+  {
+   "group": "base",
+   "addr": 14232,
+   "len": 1,
+   "what": "per-key draw loop: matching loop-exit constant",
+   "orig_sha256": "e9b0c031f0493d3fd6b0b668260c79e7efe734bfd4b4115f9d82bc3be609c294",
+   "new": "7d",
+   "free_space": false
+  },
+  {
+   "group": "base",
+   "addr": 17530,
+   "len": 6,
+   "what": "USB receive: hook for the fast per-key frame intake (copies each frame packet at arrival, no packet loss)",
+   "orig_sha256": "96d06bc759f4b5f3b05a98a46a3a84162d3d41cac50535e816bc19388e03c9f1",
+   "new": "c0df23f00000",
+   "free_space": false
+  },
+  {
+   "group": "base",
+   "addr": 18240,
+   "len": 20,
+   "what": "new code (free space): charging-LED skip routine",
+   "orig_sha256": "9a8dcd3f9ff7aa3114e141f03c12989d363ea81fd74c02eea63c5f41489cb17a",
+   "new": "720d4d9202e0c8df1bf04da0badc1cf0c8df1bf0",
+   "free_space": true
+  },
+  {
+   "group": "base",
+   "addr": 18304,
+   "len": 84,
+   "what": "new code (free space): fast per-key frame intake routine",
+   "orig_sha256": "4a83aa458b0a2379f2c7a336bd0d936f33d55fa35fd8bf823ba81cdde29725aa",
+   "new": "0802550dba9321e0dd0dbb931ee0390dbe911be0bea1bf15f49e000dc01105d0010113d1810df49010e0080de29ec20de19ebfa1d99e020dc015da9ebea1f39e04d0e63fdefff31efce7010d00027c9f40df22f0",
+   "free_space": true
+  },
+  {
+   "group": "base",
+   "addr": 24078,
+   "len": 2,
+   "what": "USB wins over wireless: switch to USB mode as soon as USB is active (stock waits for a keyboard LED report that never arrives once on the radio)",
+   "orig_sha256": "e29f69d5deeb0fb39eb29065854a48f3a12bdfc5b5cd45bf30d1e74f50451eda",
+   "new": "0000",
+   "free_space": false
+  }
+ ]
+}
