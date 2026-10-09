@@ -1,38 +1,32 @@
 # Torix Patcher
 
-A firmware patch for the **Trust GXT 868 Torix wireless keyboard**, installed by a small windowed installer. It reflashes your keyboard, so read [Risks](#risks) first. No Trust code is included: the patch is only hashes and our replacement bytes, applied to your own keyboard's firmware.
+A firmware patch for the **Trust GXT 868 Torix wireless keyboard**, installed by a small windowed installer. <br>The installer creates a backup of the stock firmware, applies the patch, and flashes the new firmware to the keyboard. Read [Risks](#risks) first. <br><br>No Trust code is included in this repo.
 
-## Why use it
+## So why use it?
+This project started as an attempt to drive custom lighting over USB, however several problems exist in the stock firmware that made it less than ideal. So... I fixed it.
 
-The stock firmware has bugs that get in the way of lighting software:
+Three major issues fixed to make this happen:
+1. Default firmware has a bug where several keys will not light in per-key lighting mode, fixed in our patch.
+2. Default firmware dropped per/key frames sent less than 8ms apart, patched accepts 2ms gaps. Much smoother animation.
+3. Default firmware left keyboard in a stuck state, needing a reset if unplugged while streaming frames from your pc. <br>Keyboard now automatically switches to USB mode when plugged in, and wifi when not.
 
-| | stock | patched |
-|---|---|---|
-| Plug the cable in while on wireless | stays on the radio and ignores the cable until a power cycle | **USB takes over as soon as it is active**, wireless takes over again when unplugged |
-| Per-key lighting from a PC | 7 keys (1, F7, T, I, K, Enter, numpad 0) stay dark; frames are dropped if sent faster than ~8 ms apart | **all keys light**; frames accepted at 2 ms gaps |
-| Charging LED by the knob | may follow PC lighting | left to the keyboard |
-
-Key mapping, the Trust app, the wireless code, the knob and the built-in effects are unchanged. Colours streamed from a PC are not saved on the keyboard: unplug and it returns to its own effect.
-
-With the patch you can drive the keyboard per key from **[OpenRGB](https://openrgb.org)** or **ASUS Aura Sync** using the optional plug-ins below.
+Optional OpenRGB and Aura plugins will be offered by the installer if it detects either on your system.
 
 ## Set up
 
-Download `TorixPatch.zip` from the [latest release](../../releases/latest), unzip it and run **`TorixInstaller.exe`** (Windows will warn that it is unsigned; it asks for administrator rights once. `Install.bat` is a fallback that needs Python and `pip install hidapi`).
+Download `TorixPatch.zip` from the [latest release](../../releases/latest), unzip it and run **`TorixInstaller.exe`** <br>(Windows will warn that it is unsigned; it asks for administrator rights once. `Install.bat` is a fallback that needs Python and `pip install hidapi`).
 
 1. Unplug the keyboard's 2.4 GHz dongle, switch wireless **off**, connect the **USB-C cable**.
 2. The installer finds the keyboard, checks it, and saves a **backup of your original firmware** to `Documents\TorixPatch\backups`.
 3. Press **Install now** and leave it plugged in for about a minute.
 4. Switch wireless back on and plug the dongle in.
 
-If OpenRGB or ASUS Aura Sync is on your PC the installer then offers its plug-in as an optional last step. Skip the ones you don't use.
 
-## Optional plug-ins (need the patched firmware, keyboard on USB cable)
+## Optional plug-ins
 
-* **OpenRGB** (version **1.0 or later**, from <https://openrgb.org>; run it once first). Copies `TorixOpenRGBPlugin.dll` into `%APPDATA%\OpenRGB\plugins`. Restart OpenRGB and *Trust GXT 868 Torix* appears as a keyboard with 104 keys in a 6x21 grid. For animated effects add OpenRGB's [Effects plugin](https://openrgb.org/plugin_effects.html). One Torix at a time. Remove: delete that file (or `openrgb\uninstall_openrgb_plugin.bat`).
-* **ASUS Aura Sync**. Registers a plug-in with Aura's lighting service; then tick *Trust GXT 868 Torix* in Armoury Crate > Aura Sync. Remove: `aura\uninstall_aura_plugin.bat`.
+* **OpenRGB** (version **1.0 or later**, from <https://openrgb.org>; run it once first). Copies `TorixOpenRGBPlugin.dll` into `%APPDATA%\OpenRGB\plugins`. Restart OpenRGB and *Trust GXT 868 Torix* appears as a keyboard with 104 keys in a 6x21 grid. For animated effects add OpenRGB's [Effects plugin](https://openrgb.org/plugin_effects.html).
+* **ASUS Aura Sync**. Registers a plug-in with Aura's lighting service; then tick *Trust GXT 868 Torix* in Armoury Crate > Aura Sync.
 
-Nothing is assumed about where programs are installed: Windows' own folders and each program's registry entry or settings folder are looked up, and a plug-in is only offered when its program is found.
 
 ## Undo
 
@@ -47,7 +41,7 @@ Run the installer again and choose **Restore the original firmware**, then pick 
 
 ## Risks
 
-Flashing firmware can in principle make a keyboard unusable and is not supported by Trust; it may void your warranty. You use this at your own risk. No affiliation with Trust International or ASUS. **Tested on a single keyboard**; if it works on yours (or not), please open an issue.
+Flashing firmware can in principle make a keyboard unusable and is not supported by Trust; it may void your warranty. You use this at your own risk. I have no affiliation with Trust International and am not responsible for any damages to your keyboard in case of a failed install.
 
 ## Files
 
@@ -57,4 +51,4 @@ Flashing firmware can in principle make a keyboard unusable and is not supported
 
 ## License
 
-GPL-3.0 (`LICENSE`). Trust's firmware is theirs and is not included.
+GPL-3.0 (`LICENSE`).
